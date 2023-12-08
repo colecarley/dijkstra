@@ -94,20 +94,21 @@ class Graph:
                         distances[self.vertices.index(neighbor)] = distance
                         previous[neighbor] = current
 
-
             # check if we're done
             if current == end:
                 shortest = distances[self.vertices.index(end)]
                 break
 
             # find next node
+            p = current
             min_distance = math.inf
             for neighbor in self.get_neighbors(current):
                 if neighbor not in explored:
                     if distances[self.vertices.index(neighbor)] < min_distance:
                         min_distance = distances[self.vertices.index(neighbor)]
                         current = neighbor
-            
+            if current == p:
+                current = previous[current]
 
         # find path
         path = []
@@ -116,7 +117,6 @@ class Graph:
             current = previous[current]
 
         path.reverse()
-
         return path, shortest
         
 

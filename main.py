@@ -2,24 +2,45 @@ from graph import graph as g
 
 def main():
     edges = [
-        ("A", "C", 3),
-        ("A", "F", 2),
-        ("C", "F", 2),
-        ("C", "E", 1),
-        ("F", "E", 3),
-        ("F", "G", 5),
-        ("F", "B", 6),
-        ("E", "B", 2),
-        ("C", "D", 4),
-        ("D", "B", 1),
-        ("B", "G", 2),
+        ("A", "B", 1),
+        ("A", "C", 2),
+        ("B", "K", 3), 
+        ("B", "L", 3),
+        ("C", "M", 1),
+        ("C", "H", 1),
+        ("C", "D", 2),
+        ("C", "F", 17),
+        ("H", "M", 1),
+        ("H", "D", 4),
+        ("D", "L", 2),
+        ("D", "E", 9),
+        ("D", "F", 7),
+        ("L", "K", 3),
+        ("K", "F", 1),
+        ("K", "E", 9),
+        ("F", "E", 2),
+        ("F", "N", 4),
+        ("F", "I", 7),
+        ("F", "O", 1),
+        ("E", "G", 5),
+        ("G", "N", 6),
+        ("G", "I", 5),
+        ("G", "J", 2),
+        ("N", "I", 3),
+        ("O", "J", 2),
+        ("J", "I", 6),
     ]
 
-    graph = g.Graph(7)
+    nodes = set()
+    for edge in edges:
+        nodes.add(edge[0])
+        nodes.add(edge[1])
+
+    graph = g.Graph(len(nodes))
 
     for edge in edges:
         graph.add_edge(edge[0], edge[1], edge[2])
-    path, distance = graph.shortest_path("A", "B")
+    path, distance = graph.shortest_path("A", "I")
 
     print(path, distance)
 
