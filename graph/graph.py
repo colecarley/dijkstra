@@ -1,44 +1,47 @@
 import math
+from typing import Generic, TypeVar
+
+T = TypeVar('T')
 
 # graph class - vertices can be of any type
-class Graph:
-    matrix = [] # Adjacency matrix
-    vertices = [] # List of vertices
+class Graph(Generic[T]):
+    matrix: list[list[T]] = [] # Adjacency matrix
+    vertices: list[T] = [] # List of vertices
     size = 0 # Number of possible vertices
 
-    def __init__(self, size):
+    def __init__(self, size: int):
         self.matrix = [[math.inf for _ in range(size)] for _ in range(size)]
         self.size = size
 
-    def add_edge(self, vertex1, vertex2, weight = 1):
+    def add_edge(self, vertex1: T, vertex2: T, weight = 1):
         if vertex1 not in self.vertices:
             self.vertices.append(vertex1)
 
         if vertex2 not in self.vertices:
             self.vertices.append(vertex2)
 
-        first = self.vertices.index(vertex1)
-        second = self.vertices.index(vertex2)
+        first: int = self.vertices.index(vertex1)
+        second: int = self.vertices.index(vertex2)
 
         self.matrix[first][second] = weight
         self.matrix[second][first] = weight
 
 
-    def remove_edge(self, vertex1, vertex2):
+    def remove_edge(self, vertex1: T, vertex2: T):
         if vertex1 not in self.vertices or vertex2 not in self.vertices:
             return None
-        first = self.vertices.index(vertex1)
-        second = self.vertices.index(vertex2)
+        first: int = self.vertices.index(vertex1)
+        second: int = self.vertices.index(vertex2)
 
         self.matrix[first][second] = 0
         self.matrix[second][first] = 0
 
 
-    def count_edges_at(self, vertex):
+    def count_edges_at(self, vertex: T):
         if vertex not in self.vertices:
             return None
-        index = self.vertices.index(vertex)
-        count = 0
+        index: int = self.vertices.index(vertex)
+        count: int = 0
 
         for i in range(self.size):
             if self.matrix[index][i] != math.inf:
@@ -46,45 +49,44 @@ class Graph:
 
         return count
     
-    def get_edge_weight(self, vertex1, vertex2):
+    def get_edge_weight(self, vertex1: T, vertex2: T):
         if vertex1 not in self.vertices or vertex2 not in self.vertices:
             return None
         
-        first = self.vertices.index(vertex1)
-        second = self.vertices.index(vertex2)
+        first: int = self.vertices.index(vertex1)
+        second: int = self.vertices.index(vertex2)
 
         return self.matrix[first][second]
     
-    def get_neighbors(self, vertex):
+    def get_neighbors(self, vertex: T):
         if vertex not in self.vertices:
             return None
         
-        index = self.vertices.index(vertex)
+        index: int = self.vertices.index(vertex)
 
-        neighbors = []
+        neighbors: list[T] = []
         for i in range(self.size):
             if self.matrix[index][i] != math.inf:
                 neighbors.append(self.vertices[i])
 
         return neighbors
             
-    def shortest_path(self, start, end):
+    def shortest_path(self, start: T, end: T) -> tuple[list[T], int]:
         if start not in self.vertices or end not in self.vertices:
             return None
 
-        distances = [math.inf for _ in range(self.size)]
+        distances: list[int] = [math.inf for _ in range(self.size)]
         distances[self.vertices.index(start)] = 0
-        explored = set()
+        explored: set[T] = set()
 
-        previous = {
+        previous: dict[T, T | None] = {
             start: None
         }
 
-        shortest = math.inf
-        current = start
+        shortest: int = math.inf
+        current: T = start
         while True:
             explored.add(current)
-
             # update distances
             for neighbor in self.get_neighbors(current):
                 if neighbor not in explored:
@@ -100,8 +102,8 @@ class Graph:
                 break
 
             # find next node
-            p = current
-            min_distance = math.inf
+            p: T = current
+            min_distance: int = math.inf
             for neighbor in self.get_neighbors(current):
                 if neighbor not in explored:
                     if distances[self.vertices.index(neighbor)] < min_distance:
@@ -111,7 +113,7 @@ class Graph:
                 current = previous[current]
 
         # find path
-        path = []
+        path: list[T] = []
         while current != None:
             path.append(current)
             current = previous[current]
